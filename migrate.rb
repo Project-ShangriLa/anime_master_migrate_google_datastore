@@ -4,6 +4,7 @@ require 'uri'
 require 'json'
 require 'httpclient'
 require 'pathname'
+require 'time'
 
 year = ARGV[0]
 cours = ARGV[1]
@@ -29,8 +30,8 @@ master_list.each do |master|
 
   #"2016-09-19 19:24:09.0" -> "2016-09-19T00:00:00+09:00"
   # Google側のTime型はRCF3339
-  master['created_at'] = DateTime.parse(master['created_at'], "%Y-%m-%d %HH:%MM:%SS").to_time.to_datetime.to_s
-  master['updated_at'] = DateTime.parse(master['updated_at'], "%Y-%m-%d %HH:%MM:%SS").to_time.to_datetime.to_s
+  master['created_at'] = Time.parse(master['created_at']).xmlschema
+  master['updated_at'] = Time.parse(master['updated_at']).xmlschema
 
   json = JSON.dump(master)
   http_client = HTTPClient.new
