@@ -27,8 +27,10 @@ auth_header = {'X-ANIME-API-ADMIN-KEY' => admin_key}
 
 master_list.each do |master|
 
-  master.delete('created_at')
-  master.delete('updated_at')
+  #"2016-09-19 19:24:09.0" -> "2016-09-19T00:00:00+09:00"
+  # Google側のTime型はRCF3339
+  master['created_at'] = Date.parse(master['created_at'], "%Y-%m-%d %HH:%MM:%SS").to_time.to_datetime.to_s
+  master['updated_at'] = Date.parse(master['updated_at'], "%Y-%m-%d %HH:%MM:%SS").to_time.to_datetime.to_s
 
   json = JSON.dump(master)
   http_client = HTTPClient.new
@@ -36,5 +38,4 @@ master_list.each do |master|
   response = http_client.put(url, json, auth_header)
   puts response.status
 
-  #break
 end
